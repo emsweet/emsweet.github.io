@@ -46,12 +46,12 @@
   };
 </script>
 
-  <meta name="description" content="FAT12文件系统基本结构 FAT文件系统把存储介质看成一位的数组，基本单位是簇。  一个簇包含一个扇区，大小为512B  存储介质划分为3个区域：boot，FAT，directory and data area        引导扇区BOOT   BS_jmpBOOT 0 3 一个短跳转指令 jmp short LABEL_STARTnop    BS_OEMName 3 8 厂商名 ‘ZGH’">
+  <meta name="description" content="FAT12文件系统 基本结构   FAT文件系统把存储介质看成一位的数组，基本单位是簇。   一个簇包含一个扇区，大小为512B   存储介质划分为3个区域：boot，FAT，directory and data area      引导扇区BOOT    BS_jmpBOOT 0 3 一个短跳转指令 jmp short LABEL_STARTnop     BS_OEMName 3 8 厂商名">
 <meta property="og:type" content="article">
 <meta property="og:title" content="nasm&amp;c++ 读取FAT12文件系统">
 <meta property="og:url" content="http://yoursite.com/2020/01/13/CS-lab1/index.html">
 <meta property="og:site_name" content="sweet&#39;s blog">
-<meta property="og:description" content="FAT12文件系统基本结构 FAT文件系统把存储介质看成一位的数组，基本单位是簇。  一个簇包含一个扇区，大小为512B  存储介质划分为3个区域：boot，FAT，directory and data area        引导扇区BOOT   BS_jmpBOOT 0 3 一个短跳转指令 jmp short LABEL_STARTnop    BS_OEMName 3 8 厂商名 ‘ZGH’">
+<meta property="og:description" content="FAT12文件系统 基本结构   FAT文件系统把存储介质看成一位的数组，基本单位是簇。   一个簇包含一个扇区，大小为512B   存储介质划分为3个区域：boot，FAT，directory and data area      引导扇区BOOT    BS_jmpBOOT 0 3 一个短跳转指令 jmp short LABEL_STARTnop     BS_OEMName 3 8 厂商名">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20200113213415437.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzI0MjgzNg==,size_16,color_FFFFFF,t_70">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20200113213536221.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzI0MjgzNg==,size_16,color_FFFFFF,t_70">
@@ -61,7 +61,7 @@
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20200113213635556.png">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/2020011321364255.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzI0MjgzNg==,size_16,color_FFFFFF,t_70">
 <meta property="article:published_time" content="2020-01-13T09:24:46.000Z">
-<meta property="article:modified_time" content="2020-01-13T13:43:38.002Z">
+<meta property="article:modified_time" content="2020-01-13T13:53:55.984Z">
 <meta property="article:author" content="ZTT">
 <meta property="article:tag" content="-OS_LAB">
 <meta name="twitter:card" content="summary">
@@ -212,7 +212,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2020-01-13 17:24:46 / Modified: 21:43:38" itemprop="dateCreated datePublished" datetime="2020-01-13T17:24:46+08:00">2020-01-13</time>
+              <time title="Created: 2020-01-13 17:24:46 / Modified: 21:53:55" itemprop="dateCreated datePublished" datetime="2020-01-13T17:24:46+08:00">2020-01-13</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -237,20 +237,24 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="FAT12文件系统"><a href="#FAT12文件系统" class="headerlink" title="FAT12文件系统"></a>FAT12文件系统</h2><h3 id="基本结构"><a href="#基本结构" class="headerlink" title="基本结构"></a>基本结构</h3><ul>
-<li><p>FAT文件系统把存储介质看成一位的数组，基本单位是簇。</p>
+        <h2 id="FAT12文件系统">FAT12文件系统</h2>
+<h3 id="基本结构">基本结构</h3>
+<ul>
+<li>
+<p>FAT文件系统把存储介质看成一位的数组，基本单位是簇。</p>
 </li>
-<li><p>一个簇包含一个扇区，大小为512B</p>
+<li>
+<p>一个簇包含一个扇区，大小为512B</p>
 </li>
-<li><p>存储介质划分为3个区域：boot，FAT，directory and data area</p>
+<li>
+<p>存储介质划分为3个区域：boot，FAT，directory and data area</p>
 </li>
-<li><img src="https://img-blog.csdnimg.cn/20200113213415437.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzI0MjgzNg==,size_16,color_FFFFFF,t_70" alt="图片1" style="zoom:40%;" />
-
-
-
+<li>
+<img src="https://img-blog.csdnimg.cn/20200113213415437.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzI0MjgzNg==,size_16,color_FFFFFF,t_70" alt="图片1" style="zoom:40%;" />
 </li>
 </ul>
-<h3 id="引导扇区BOOT"><a href="#引导扇区BOOT" class="headerlink" title="引导扇区BOOT"></a>引导扇区BOOT</h3><table>
+<h3 id="引导扇区BOOT">引导扇区BOOT</h3>
+<table>
 <thead>
 <tr>
 <th>BS_jmpBOOT</th>
@@ -260,7 +264,8 @@
 <th>jmp short LABEL_STARTnop</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>BS_OEMName</td>
 <td>3</td>
 <td>8</td>
@@ -407,45 +412,61 @@
 <td>第510字节为0x55，第511字节为0xAA</td>
 <td>0xAA55</td>
 </tr>
-</tbody></table>
-<h3 id="FAT-File-Allocation-Table"><a href="#FAT-File-Allocation-Table" class="headerlink" title="FAT-File Allocation Table"></a>FAT-File Allocation Table</h3><ul>
-<li><p>FAT1和FAT2互为备份。</p>
+</tbody>
+</table>
+<h3 id="FAT-File-Allocation-Table">FAT-File Allocation Table</h3>
+<ul>
+<li>
+<p>FAT1和FAT2互为备份。</p>
 </li>
-<li><p>每12位成为一个FAT项(FATEntry)，代表一个簇。所以2个FAT项会占用3个字节</p>
+<li>
+<p>每12位成为一个FAT项(FATEntry)，代表一个簇。所以2个FAT项会占用3个字节</p>
 </li>
-<li><p>数据区起始于簇2,why?</p>
+<li>
+<p>数据区起始于簇2,why?</p>
 <p>-在1.44M软盘上，FAT前三个字节的值是固定的0xF0、0xFF、0xFF，用于表示这是一个应用在1.44M软盘上的FAT12文件系统。本来序号为0和1的FAT表项应该对应于簇0和簇1，但是由于这两个表项被设置成了固定值，簇0和簇1就没有存在的意义.</p>
 </li>
-<li><p>FAT项的值代表文件的下一个簇号</p>
+<li>
+<p>FAT项的值代表文件的下一个簇号</p>
 <ul>
 <li>值为0xFF7，表示坏簇</li>
 <li>值大于或等于0xFF8，表示当前簇是本文件的最后一个簇</li>
 </ul>
 </li>
-<li><p><img src="https://img-blog.csdnimg.cn/20200113213536221.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzI0MjgzNg==,size_16,color_FFFFFF,t_70" alt=""></p>
+<li>
+<p><img src="https://img-blog.csdnimg.cn/20200113213536221.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzI0MjgzNg==,size_16,color_FFFFFF,t_70" alt=""></p>
 </li>
 </ul>
-<h3 id="根目录区"><a href="#根目录区" class="headerlink" title="根目录区"></a>根目录区</h3><ul>
+<h3 id="根目录区">根目录区</h3>
+<ul>
 <li>根目录区由目录项组成，一个目录项占32个字节。</li>
 <li><img src="https://img-blog.csdnimg.cn/20200113213526412.gif" alt=""></li>
 </ul>
-<h2 id="g-与nasm混合编程"><a href="#g-与nasm混合编程" class="headerlink" title="g++与nasm混合编程"></a>g++与nasm混合编程</h2><ul>
-<li><p>环境ubuntu64，安装g++,nasm</p>
+<h2 id="g-与nasm混合编程">g++与nasm混合编程</h2>
+<ul>
+<li>
+<p>环境ubuntu64，安装g++,nasm</p>
 </li>
-<li><p>my_print.asm负责输出，1.cpp为主文件</p>
+<li>
+<p>my_print.asm负责输出，1.cpp为主文件</p>
 </li>
-<li><p>1.cpp中首先声明函数</p>
+<li>
+<p>1.cpp中首先声明函数</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="string">"C"</span> <span class="function"><span class="keyword">void</span> <span class="title">my_print</span><span class="params">(<span class="keyword">char</span> *, <span class="keyword">int</span>, <span class="keyword">int</span>)</span></span>;</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>my_print.asm定义函数，注意用global my_print声明函数名。</p>
+<li>
+<p>my_print.asm定义函数，注意用global my_print声明函数名。</p>
 </li>
-<li><p>命令</p>
+<li>
+<p>命令</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ nasm -f elf32 my_print.asm</span><br><span class="line">$ g++ -o fat -m32 1.cpp my_print.o</span><br><span class="line">$ .&#x2F;fat</span><br></pre></td></tr></table></figure>
-
 </li>
 </ul>
-<h2 id="如何读取FAT12文件？"><a href="#如何读取FAT12文件？" class="headerlink" title="如何读取FAT12文件？"></a>如何读取FAT12文件？</h2><h3 id="Steps"><a href="#Steps" class="headerlink" title="Steps"></a>Steps</h3><ol>
-<li><p>读取Boot，得到必要的参数：</p>
+<h2 id="如何读取FAT12文件？">如何读取FAT12文件？</h2>
+<h3 id="Steps">Steps</h3>
+<ol>
+<li>
+<p>读取Boot，得到必要的参数：</p>
 <ul>
 <li>BPB_BytsPerSec <em>每扇区字节数</em></li>
 <li>BPB_SecPerClus <em>每簇扇区数</em></li>
@@ -456,7 +477,8 @@
 <li>BPB_HiddSec</li>
 </ul>
 </li>
-<li><p>计算每簇的字节数，每个区域的初始位置的偏移量。</p>
+<li>
+<p>计算每簇的字节数，每个区域的初始位置的偏移量。</p>
 <ul>
 <li>每簇字节数=每簇扇区数*每扇区字节数。</li>
 <li>fatBase=Boot记录占用的扇区数*每扇区字节数</li>
@@ -465,35 +487,44 @@
 </ul>
 <p>数据区的偏移量又乘又除是不是吃饱了撑的0.0？可不可以等于fileRootBase+根目录最大文件数*32？不阔以！</p>
 <p>dataBase初始位置=FileRootBase最后一个簇的结束位置。如果根目录没有填满最后一个簇，数据区也是从下一个簇开始的，而不是默认于最后一个根目录的结束位置开始。</p>
-<p>用 <strong>（根目录最大文件数* 32+每扇区字节数-1）/每扇区字节数</strong> 可以得到根目录区占用的真正扇区数。</p>
+<p>用 <em><em>（根目录最大文件数</em> 32+每扇区字节数-1）/每扇区字节数</em>* 可以得到根目录区占用的真正扇区数。</p>
 </li>
-<li><p>广搜遍历Fat12文件系统</p>
+<li>
+<p>广搜遍历Fat12文件系统</p>
 <ul>
 <li>首先读取根目录区</li>
 </ul>
 </li>
 </ol>
 <ul>
-<li><p>判断文件属性</p>
+<li>
+<p>判断文件属性</p>
 <ul>
-<li><p>目录项的属性记录了该项是文件夹or文件</p>
+<li>
+<p>目录项的属性记录了该项是文件夹or文件</p>
 <ul>
-<li><p>用DIR_Attr&amp;0x10判断，结果为0是文件，否则为文件夹。</p>
-<ul>
-<li>处理文件夹</li>
+<li>用DIR_Attr&amp;0x10判断，结果为0是文件，否则为文件夹。</li>
 </ul>
 </li>
-<li><p>得到下一层目录的数据区初始位置，首先需要FAT号。文件夹的目录项中DIR_FstClus记录了文件夹FAT号(num)，其内容即为所需FAT号。</p>
+<li>
+<p>处理文件夹</p>
 <ul>
-<li><p>FAT项大小为12位。</p>
+<li>
+<p>得到下一层目录的数据区初始位置，首先需要FAT号。文件夹的目录项中DIR_FstClus记录了文件夹FAT号(num)，其内容即为所需FAT号。</p>
+<ul>
+<li>
+<p>FAT项大小为12位。</p>
 </li>
-<li><p>从fatBase <strong>+</strong> num <strong>*** 3 **/</strong> 2读取2个字节（16位）。结合存储的小尾顺序和FAT项结构可以得到。num为偶去掉高4位,num为奇去掉低4位。</p>
+<li>
+<p>从fatBase <strong>+</strong> num ***** 3 <strong>/</strong> 2读取2个字节（16位）。结合存储的小尾顺序和FAT项结构可以得到。num为偶去掉高4位,num为奇去掉低4位。</p>
 </li>
-<li><p>(num &amp; 1) ? (bytes &gt;&gt; 4) : (bytes &amp; ((1 &lt;&lt; 12) - 1))为下一个FAT号</p>
+<li>
+<p>(num &amp; 1) ? (bytes &gt;&gt; 4) : (bytes &amp; ((1 &lt;&lt; 12) - 1))为下一个FAT号</p>
 </li>
 </ul>
 </li>
-<li><p>用FAT号计算在数据区中的位置。</p>
+<li>
+<p>用FAT号计算在数据区中的位置。</p>
 <ul>
 <li>startByte <strong>=</strong> dataBase <strong>+</strong> (fat号- 2) ***** BytsPerClus;</li>
 </ul>
@@ -502,46 +533,55 @@
 </li>
 </ul>
 </li>
-<li><p>处理普通文件</p>
+<li>
+<p>处理普通文件</p>
 <ul>
 <li>如果文件在数据区中需要多个簇，那么用上面的办法读取数据。</li>
 </ul>
 </li>
-<li><p>广搜遍历</p>
+<li>
+<p>广搜遍历</p>
 <ul>
-<li>分层遍历<ul>
-<li>每一层的文件夹放进队列。</li>
-</ul>
-</li>
+<li>分层遍历</li>
+<li>每一层的文件夹放进队列。
+<ul>
 <li>队列为空则停止</li>
 </ul>
 </li>
 </ul>
-<h2 id="用文件名查询特定文件"><a href="#用文件名查询特定文件" class="headerlink" title="用文件名查询特定文件"></a>用文件名查询特定文件</h2><ol>
+</li>
+</ul>
+<h2 id="用文件名查询特定文件">用文件名查询特定文件</h2>
+<ol>
 <li>对于目录项中的文件名做处理，去除非法字符和空格。如果是普通文件，第一个空格为‘.’。</li>
 <li>判断文件名是否相等，strcmp等等各种方法都可。</li>
 </ol>
-<h2 id="制作FAT镜像"><a href="#制作FAT镜像" class="headerlink" title="制作FAT镜像"></a>制作FAT镜像</h2><ol>
-<li><p>创建新的软盘镜像</p>
+<h2 id="制作FAT镜像">制作FAT镜像</h2>
+<ol>
+<li>
+<p>创建新的软盘镜像</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkfs.fat -C a.img 1440</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>挂载点，可以创建一个新的目录</p>
+<li>
+<p>挂载点，可以创建一个新的目录</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir 文件名</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>将镜像挂载到挂载点</p>
+<li>
+<p>将镜像挂载到挂载点</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo mount a.img 文件名</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>挂载后，就可以通过操作./mount文件夹，来向a.img加入和查看文件。可使用系统自带的资源管理器类似 GUI工具，或者使用命令行操作。 </p>
+<li>
+<p>挂载后，就可以通过操作./mount文件夹，来向a.img加入和查看文件。可使用系统自带的资源管理器类似 GUI工具，或者使用命令行操作。</p>
 </li>
 </ol>
-<h2 id="我的呆码-click-me"><a href="#我的呆码-click-me" class="headerlink" title="我的呆码  click me"></a>我的呆码  <a href="https://github.com/emsweet/OS_LAB/tree/master/lab1" target="_blank" rel="noopener">click me</a></h2><p>支持ls，cat 文件名，ls -l[lll] [文件名],ls [文件名] -l[lll] . </p>
+<h2 id="我的呆码👉-click-me">我的呆码👉  <a href="https://github.com/emsweet/OS_LAB/tree/master/lab1" target="_blank" rel="noopener">click me</a></h2>
+<p>支持ls，cat 文件名，ls -l[lll] [文件名],ls [文件名] -l[lll] .</p>
 <p><img src="https://img-blog.csdnimg.cn/20200113213616253.png" alt="image-20200113204622190"></p>
 <p><img src="https://img-blog.csdnimg.cn/20200113213625585.png" alt="在这里插入图片描述"></p>
 <img src="https://img-blog.csdnimg.cn/20200113213635556.png" alt="在这里插入图片描述" />
-
 <img src="https://img-blog.csdnimg.cn/2020011321364255.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzI0MjgzNg==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" style="zoom:80%;" />
-
-<h2 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h2><p><a href="https://blog.csdn.net/qq_39654127/article/details/88429461#main-toc" target="_blank" rel="noopener">https://blog.csdn.net/qq_39654127/article/details/88429461#main-toc</a></p>
+<h2 id="reference">reference</h2>
+<p><a href="https://blog.csdn.net/qq_39654127/article/details/88429461#main-toc" target="_blank" rel="noopener">https://blog.csdn.net/qq_39654127/article/details/88429461#main-toc</a></p>
 <p><a href="https://blog.csdn.net/judyge/article/details/52373751" target="_blank" rel="noopener">https://blog.csdn.net/judyge/article/details/52373751</a></p>
 <p><a href="https://blog.csdn.net/yxc135/article/details/8769086" target="_blank" rel="noopener">https://blog.csdn.net/yxc135/article/details/8769086</a></p>
 
@@ -625,7 +665,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#FAT12文件系统"><span class="nav-number">1.</span> <span class="nav-text">FAT12文件系统</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基本结构"><span class="nav-number">1.1.</span> <span class="nav-text">基本结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#引导扇区BOOT"><span class="nav-number">1.2.</span> <span class="nav-text">引导扇区BOOT</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FAT-File-Allocation-Table"><span class="nav-number">1.3.</span> <span class="nav-text">FAT-File Allocation Table</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#根目录区"><span class="nav-number">1.4.</span> <span class="nav-text">根目录区</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#g-与nasm混合编程"><span class="nav-number">2.</span> <span class="nav-text">g++与nasm混合编程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何读取FAT12文件？"><span class="nav-number">3.</span> <span class="nav-text">如何读取FAT12文件？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Steps"><span class="nav-number">3.1.</span> <span class="nav-text">Steps</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#用文件名查询特定文件"><span class="nav-number">4.</span> <span class="nav-text">用文件名查询特定文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#制作FAT镜像"><span class="nav-number">5.</span> <span class="nav-text">制作FAT镜像</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#我的呆码-click-me"><span class="nav-number">6.</span> <span class="nav-text">我的呆码  click me</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">7.</span> <span class="nav-text">reference</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#FAT12文件系统"><span class="nav-number">1.</span> <span class="nav-text">FAT12文件系统</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基本结构"><span class="nav-number">1.1.</span> <span class="nav-text">基本结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#引导扇区BOOT"><span class="nav-number">1.2.</span> <span class="nav-text">引导扇区BOOT</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FAT-File-Allocation-Table"><span class="nav-number">1.3.</span> <span class="nav-text">FAT-File Allocation Table</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#根目录区"><span class="nav-number">1.4.</span> <span class="nav-text">根目录区</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#g-与nasm混合编程"><span class="nav-number">2.</span> <span class="nav-text">g++与nasm混合编程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何读取FAT12文件？"><span class="nav-number">3.</span> <span class="nav-text">如何读取FAT12文件？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Steps"><span class="nav-number">3.1.</span> <span class="nav-text">Steps</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#用文件名查询特定文件"><span class="nav-number">4.</span> <span class="nav-text">用文件名查询特定文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#制作FAT镜像"><span class="nav-number">5.</span> <span class="nav-text">制作FAT镜像</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#我的呆码👉-click-me"><span class="nav-number">6.</span> <span class="nav-text">我的呆码👉  click me</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reference"><span class="nav-number">7.</span> <span class="nav-text">reference</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
